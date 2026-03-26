@@ -1,7 +1,8 @@
-# SignGUI [![Build](https://github.com/Rapha149/SignGUI/actions/workflows/build.yml/badge.svg)](https://github.com/Rapha149/SignGUI/actions/workflows/build.yml) [![Maven Central](https://img.shields.io/maven-central/v/de.rapha149.signgui/signgui?label=Maven%20Central)](https://central.sonatype.com/artifact/de.rapha149.signgui/signgui) [![Javadoc](https://javadoc.io/badge2/de.rapha149.signgui/signgui/Javadoc.svg)](https://javadoc.io/doc/de.rapha149.signgui/signgui) 
-An api to get input text via a sign in Minecraft.  
-The api supports the Minecraft versions from `1.8` to `1.21`.  
-Also supports adventure text and mojang-mapped Paper plugins (1.20.5+).
+# SignGUI (Fork)
+An api to get input text via a sign in Minecraft.
+This is a fork of [Rapha149/SignGUI](https://github.com/Rapha149/SignGUI) with Folia support.
+The api supports the Minecraft versions from `1.20` to `1.21`.
+Also supports adventure text, mojang-mapped Paper plugins (1.20.5+), and Folia servers.
 
 ## Integration
 
@@ -10,7 +11,7 @@ Maven dependency:
 <dependency>
     <groupId>de.rapha149.signgui</groupId>
     <artifactId>signgui</artifactId>
-    <version>2.5.4</version>
+    <version>2.5.5</version>
 </dependency>
 ```
 
@@ -57,8 +58,8 @@ There are two solution to this problem:
    Wrapper1_20_R4.class.getName()
    ```
    I used the class `Wrapper1_20_R4` in this example which corresponds to the Minecraft version `1.20.5` and `1.20.6`.
-   If you are using a mojang-mapped Paper plugin the class would be `MojangWrapper1_20_R4`.  
-   In order to find out which Minecraft version corresponds to which wrapper class you can check out this Github repository of mine: [NMSVersions](https://github.com/Rapha149/NMSVersions?tab=readme-ov-file#versions).  
+   If you are using a mojang-mapped Paper plugin the class would be `MojangWrapper1_20_R4`.
+   In order to find out which Minecraft version corresponds to which wrapper class you can check out this Github repository of mine: [NMSVersions](https://github.com/Rapha149/NMSVersions?tab=readme-ov-file#versions).
    ​
 3. Exclude the SignGUI dependency from being affected by the `minimize()` method like this:
    ```gradle
@@ -67,7 +68,7 @@ There are two solution to this problem:
        exclude(dependency("de\\.rapha149\\.signgui:signgui:.*"))
    }
    ```
-   This solution will cause all wrapper classes to compile. Even if your plugin only supports Minecraft 1.17+ it will also compile the wrapper classes for versions up to 1.16.5.
+   This solution will cause all wrapper classes to compile.
    However, it's not that much code and there is, to my knowledge, no better solution.
 </details>
 
