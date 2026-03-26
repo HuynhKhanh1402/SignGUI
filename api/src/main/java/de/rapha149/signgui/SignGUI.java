@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 /**
  * The base class of this api. Use {@link SignGUI#builder()} to get a new instance.
@@ -67,6 +68,9 @@ public class SignGUI {
         Validate.notNull(player, "The player cannot be null");
 
         try {
+            BiConsumer<Location, Runnable> locationScheduler = (loc, task) ->
+                    SchedulerAdapterFactory.getScheduler().runAtLocation(plugin, loc, task);
+
             VersionMatcher.getWrapper().openSignEditor(player, lines, adventureLines, type, color, glow, signLoc, (signEditor, resultLines) -> {
                 Runnable runnable = () -> {
                     Runnable close = () -> {
@@ -111,7 +115,7 @@ public class SignGUI {
                     SchedulerAdapterFactory.getScheduler().runAtEntity(plugin, player, runnable, null);
                 else
                     runnable.run();
-            });
+            }, locationScheduler);
         } catch (Exception e) {
             throw new SignGUIException("Failed to open sign gui", e);
         }

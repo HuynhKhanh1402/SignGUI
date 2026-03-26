@@ -63,7 +63,7 @@ public class Wrapper1_20_R1 implements VersionWrapper {
     }
 
     @Override
-    public void openSignEditor(Player player, String[] lines, Object[] adventureLines, Material type, DyeColor color, boolean glow, Location signLoc, BiConsumer<SignEditor, String[]> onFinish) throws IllegalAccessException {
+    public void openSignEditor(Player player, String[] lines, Object[] adventureLines, Material type, DyeColor color, boolean glow, Location signLoc, BiConsumer<SignEditor, String[]> onFinish, BiConsumer<Location, Runnable> locationScheduler) throws IllegalAccessException {
         EntityPlayer p = ((CraftPlayer) player).getHandle();
         PlayerConnection conn = p.c;
 
@@ -105,7 +105,7 @@ public class Wrapper1_20_R1 implements VersionWrapper {
             conn.a(sign.j());
             conn.a(new PacketPlayOutOpenSignEditor(pos, true)); // flag = front/back of sign
 
-            SignEditor signEditor = new SignEditor(sign, loc, pos, pipeline);
+            SignEditor signEditor = new SignEditor(sign, loc, pos, pipeline, locationScheduler);
             pipeline.addAfter("decoder", "SignGUI", new SignGUIChannelHandler<Packet<?>>() {
 
                 @Override
@@ -157,7 +157,9 @@ public class Wrapper1_20_R1 implements VersionWrapper {
     @Override
     public void closeSignEditor(Player player, SignEditor signEditor) {
         Location loc = signEditor.getLocation();
-        signEditor.getPipeline().remove("SignGUI");
-        player.sendBlockChange(loc, loc.getBlock().getBlockData());
+        if (signEditor.getPipeline().names().contains("SignGUI"))
+            signEditor.getPipeline().remove("SignGUI");
+        signEditor.getLocationScheduler().accept(loc, () ->
+                player.sendBlockChange(loc, loc.getBlock().getBlockData()));
     }
 }
